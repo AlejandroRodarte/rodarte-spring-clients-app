@@ -3,10 +3,8 @@ package com.rodarte.models.controller;
 import com.rodarte.models.entity.Client;
 import com.rodarte.models.service.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -23,6 +21,17 @@ public class ClientController {
     @GetMapping
     public List<Client> getClients() {
         return clientService.findAll();
+    }
+
+    @GetMapping("/{id}")
+    public Client getClient(@PathVariable Long id) {
+        return clientService.findById(id);
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public Client saveClient(@RequestBody Client client) {
+        return clientService.save(client);
     }
 
 }

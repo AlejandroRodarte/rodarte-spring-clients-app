@@ -26,6 +26,12 @@ public class Client implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date createdAt;
 
+    // before persisting new clients, attach the data to the entity
+    @PrePersist
+    public void prePersist() {
+        createdAt = new Date();
+    }
+
     public Long getId() {
         return id;
     }
