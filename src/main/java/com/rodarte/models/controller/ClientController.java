@@ -6,11 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 // allow our angular app to access this resource; enabled http methods: GET, POST, PUT, DELETE
 // if not specified, it allows the selected origins to perform all operations
@@ -55,10 +58,25 @@ public class ClientController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<?> saveClient(@RequestBody Client client) {
+    public ResponseEntity<?> saveClient(@Valid @RequestBody Client client, BindingResult bindingResult) {
 
         Client newClient = null;
         Map<String, Object> response = new HashMap<>();
+
+        if (bindingResult.hasErrors()) {
+
+            List<String> errors =
+                    bindingResult
+                            .getFieldErrors()
+                            .stream()
+                            .map(fieldError -> "The field '" + fieldError.getField() + "' " + fieldError.getDefaultMessage())
+                            .collect(Collectors.toList());
+
+            response.put("errors", errors);
+
+            return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
+
+        }
 
         try {
             newClient = clientService.save(client);
@@ -80,12 +98,27 @@ public class ClientController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<?> updateClient(@RequestBody Client client, @PathVariable Long id) {
+    public ResponseEntity<?> updateClient(@Valid @RequestBody Client client, @PathVariable Long id, BindingResult bindingResult) {
 
         Client clientToUpdate = clientService.findById(id);
         Client updatedClient = null;
 
         Map<String, Object> response = new HashMap<>();
+
+        if (bindingResult.hasErrors()) {
+
+            List<String> errors =
+                    bindingResult
+                            .getFieldErrors()
+                            .stream()
+                            .map(fieldError -> "The field '" + fieldError.getField() + "' " + fieldError.getDefaultMessage())
+                            .collect(Collectors.toList());
+
+            response.put("errors", errors);
+
+            return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
+
+        }
 
         if (clientToUpdate == null) {
             response.put("message", "Can not update, client with id " + id + " does not exist in the database!");
