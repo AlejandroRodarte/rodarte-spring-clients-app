@@ -3,10 +3,14 @@ package com.rodarte.models.controller;
 import com.rodarte.models.entity.Client;
 import com.rodarte.models.service.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 // allow our angular app to access this resource; enabled http methods: GET, POST, PUT, DELETE
 // if not specified, it allows the selected origins to perform all operations
@@ -24,8 +28,29 @@ public class ClientController {
     }
 
     @GetMapping("/{id}")
-    public Client getClient(@PathVariable Long id) {
-        return clientService.findById(id);
+    public ResponseEntity<?> getClient(@PathVariable Long id) {
+
+        Client client = null;
+        Map<String, Object> errorResponse = new HashMap<>();
+
+        try {
+            client = clientService.findById(id);
+        } catch (DataAccessException e) {
+
+            errorResponse.put("message", "Error accessing the database!");
+            errorResponse.put("error", e.getMessage() + ": " + e.getMostSpecificCause().getMessage());
+
+            return new ResponseEntity<Map<String, Object>>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+
+        }
+
+        if (client == null) {
+            errorResponse.put("message", "The client with ID of " + id + " does not exist in the database!");
+            return new ResponseEntity<Map<String, Object>>(errorResponse, HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<Client>(client, HttpStatus.OK);
+
     }
 
     @PostMapping
