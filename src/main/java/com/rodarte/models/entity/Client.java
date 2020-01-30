@@ -16,17 +16,17 @@ public class Client implements Serializable {
     @Column(name = "id")
     private Long id;
 
-    @NotEmpty
-    @Size(min = 4, max = 12)
+    @NotEmpty(message = "can not be empty")
+    @Size(min = 4, max = 12, message = "must be between 4 and 12 characters")
     @Column(name = "first_name", nullable = false)
     private String firstName;
 
-    @NotEmpty
+    @NotEmpty(message = "can not be empty")
     @Column(name = "last_name")
     private String lastName;
 
-    @NotEmpty
-    @Email
+    @NotEmpty(message = "can not be empty")
+    @Email(message = "must be a valid email")
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
