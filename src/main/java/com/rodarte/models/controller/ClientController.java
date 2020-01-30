@@ -55,8 +55,27 @@ public class ClientController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Client saveClient(@RequestBody Client client) {
-        return clientService.save(client);
+    public ResponseEntity<?> saveClient(@RequestBody Client client) {
+
+        Client newClient = null;
+        Map<String, Object> response = new HashMap<>();
+
+        try {
+            newClient = clientService.save(client);
+        } catch (DataAccessException e) {
+
+            response.put("message", "Error persisting client into the database!");
+            response.put("error", e.getMessage() + ": " + e.getMostSpecificCause().getMessage());
+
+            return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+
+        }
+
+        response.put("message", "Client persisted successfully!");
+        response.put("client", newClient);
+
+        return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
+
     }
 
     @PutMapping("/{id}")
