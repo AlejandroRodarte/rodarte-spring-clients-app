@@ -4,6 +4,8 @@ import com.rodarte.models.entity.Client;
 import com.rodarte.models.service.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -28,6 +30,11 @@ public class ClientController {
     @GetMapping
     public List<Client> getClients() {
         return clientService.findAll();
+    }
+
+    @GetMapping("/page/{page}")
+    public Page<Client> getClients(@PathVariable Integer page) {
+        return clientService.findAll(PageRequest.of(page, 4));
     }
 
     @GetMapping("/{id}")

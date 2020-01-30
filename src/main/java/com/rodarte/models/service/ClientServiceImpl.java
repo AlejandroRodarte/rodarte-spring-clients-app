@@ -3,6 +3,8 @@ package com.rodarte.models.service;
 import com.rodarte.models.dao.ClientDao;
 import com.rodarte.models.entity.Client;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +20,12 @@ public class ClientServiceImpl implements ClientService {
     @Transactional(readOnly = true)
     public List<Client> findAll() {
         return (List<Client>) clientDao.findAll();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<Client> findAll(Pageable pageable) {
+        return clientDao.findAll(pageable);
     }
 
     @Override
