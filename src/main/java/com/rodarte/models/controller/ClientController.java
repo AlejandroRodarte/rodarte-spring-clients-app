@@ -118,8 +118,25 @@ public class ClientController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteClient(@PathVariable Long id) {
-        clientService.deleteById(id);
+    public ResponseEntity<?> deleteClient(@PathVariable Long id) {
+
+        Map<String, Object> response = new HashMap<>();
+
+        try {
+            clientService.deleteById(id);
+        } catch (DataAccessException e) {
+
+            response.put("message", "Error deleting client from the database!");
+            response.put("error", e.getMessage() + ": " + e.getMostSpecificCause().getMessage());
+
+            return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+
+        }
+
+        response.put("message", "The client was successfully deleted!");
+
+        return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
+
     }
 
 }
