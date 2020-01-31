@@ -105,7 +105,7 @@ public class ClientController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<?> updateClient(@Valid @RequestBody Client client, @PathVariable Long id, BindingResult bindingResult) {
+    public ResponseEntity<?> updateClient(@Valid @RequestBody Client client, BindingResult bindingResult, @PathVariable Long id) {
 
         Client clientToUpdate = clientService.findById(id);
         Client updatedClient = null;
@@ -137,6 +137,7 @@ public class ClientController {
             clientToUpdate.setFirstName(client.getFirstName());
             clientToUpdate.setLastName(client.getLastName());
             clientToUpdate.setEmail(client.getEmail());
+            clientToUpdate.setCreatedAt(client.getCreatedAt());
 
             updatedClient = clientService.save(clientToUpdate);
 
