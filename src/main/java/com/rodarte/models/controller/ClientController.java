@@ -10,8 +10,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -98,6 +103,53 @@ public class ClientController {
 
         response.put("message", "Client persisted successfully!");
         response.put("client", newClient);
+
+        return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
+
+    }
+
+    // upload image route
+    // expects: form-data with two args: the image itself (multipartFile) and the client id
+    @PostMapping("/upload")
+    public ResponseEntity<?> uploadImage(@RequestParam("image") MultipartFile multipartFile, @RequestParam("id") Long id) {
+
+        Map<String, Object> response = new HashMap<>();
+
+        Client client = clientService.findById(id);
+
+        if (client == null) {
+            response.put("message", "The client with ID of " + id + " does not exist in the database!");
+            return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
+        }
+
+        // check if file is not empty
+        if (!multipartFile.isEmpty()) {
+
+            // get file original name
+            String originalFilename = multipartFile.getOriginalFilename();
+
+            // get absolute path where we will save this image on this computer
+            Path filePath = Paths.get("uploads").resolve(originalFilename).toAbsolutePath();
+
+            // copy file into the computer: requires the input stream of data (multipartFile) and the path where
+            // the data will be copied to (filePath)
+            try {
+                Files.copy(multipartFile.getInputStream(), filePath);
+            } catch (IOException e) {
+                response.put("message", "There was a problem uploading the image to this. Filename: " + originalFilename);
+                response.put("error", e.getMessage() + ": " + e.getCause().getMessage());
+                return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+
+            // set image filename on database
+            client.setImage(originalFilename);
+
+            clientService.save(client);
+
+            response.put("client", client);
+            response.put("message", "Image uploaded successfully into the server. Filename: " + originalFilename);
+
+        }
 
         return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
 
