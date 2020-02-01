@@ -3,9 +3,12 @@ package com.rodarte.models.controller;
 import com.rodarte.models.entity.Client;
 import com.rodarte.models.service.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -15,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.Valid;
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -67,6 +71,34 @@ public class ClientController {
         }
 
         return new ResponseEntity<Client>(client, HttpStatus.OK);
+
+    }
+
+    // serve an image to client
+    @GetMapping("/image/{filename:.+}")
+    public ResponseEntity<Resource> serveImage(@PathVariable String filename) {
+
+        // get absolute path from image filename
+        Path filePath = Paths.get("uploads").resolve(filename).toAbsolutePath();
+
+        Resource resource = null;
+
+        // get resource from the path's URI
+        try {
+            resource = new UrlResource(filePath.toUri());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        if (!resource.exists() && !resource.isReadable()) {
+            throw new RuntimeException("Image could not be served: " + filename);
+        }
+
+        // set Content-Disposition header to force browser to download image upon accessing route
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"");
+
+        return new ResponseEntity<Resource>(resource, headers, HttpStatus.OK);
 
     }
 
