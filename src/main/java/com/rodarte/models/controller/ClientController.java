@@ -20,6 +20,7 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 // allow our angular app to access this resource; enabled http methods: GET, POST, PUT, DELETE
@@ -126,7 +127,7 @@ public class ClientController {
         if (!multipartFile.isEmpty()) {
 
             // get file original name
-            String originalFilename = multipartFile.getOriginalFilename();
+            String originalFilename = UUID.randomUUID().toString() + "_" + multipartFile.getOriginalFilename().replace(" ", "");
 
             // get absolute path where we will save this image on this computer
             Path filePath = Paths.get("uploads").resolve(originalFilename).toAbsolutePath();
