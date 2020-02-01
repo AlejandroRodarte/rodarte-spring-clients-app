@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -142,6 +143,23 @@ public class ClientController {
                 return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
             }
 
+            // verify if user had an associated image
+            String previousFilename = client.getImage();
+
+            // if so
+            if (previousFilename != null && previousFilename.length() > 0) {
+
+                // get filepath to that image and parse path to a file object
+                Path previousFilePath = Paths.get("uploads").resolve(previousFilename).toAbsolutePath();
+                File previousFile = previousFilePath.toFile();
+
+                // if such file exists and can be read, delete
+                if (previousFile.exists() && previousFile.canRead()) {
+                    previousFile.delete();
+                }
+
+            }
+
             // set image filename on database
             client.setImage(originalFilename);
 
@@ -217,7 +235,24 @@ public class ClientController {
         Map<String, Object> response = new HashMap<>();
 
         try {
+
+            Client client = clientService.findById(id);
+
+            String previousFilename = client.getImage();
+
+            if (previousFilename != null && previousFilename.length() > 0) {
+
+                Path previousFilePath = Paths.get("uploads").resolve(previousFilename).toAbsolutePath();
+                File previousFile = previousFilePath.toFile();
+
+                if (previousFile.exists() && previousFile.canRead()) {
+                    previousFile.delete();
+                }
+
+            }
+
             clientService.deleteById(id);
+
         } catch (DataAccessException e) {
 
             response.put("message", "Error deleting client from the database!");
