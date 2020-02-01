@@ -2,6 +2,8 @@ package com.rodarte.models.controller;
 
 import com.rodarte.models.entity.Client;
 import com.rodarte.models.service.ClientService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -37,6 +39,8 @@ public class ClientController {
 
     @Autowired
     private ClientService clientService;
+
+    private final Logger logger = LoggerFactory.getLogger(ClientController.class);
 
     @GetMapping
     public List<Client> getClients() {
@@ -80,6 +84,8 @@ public class ClientController {
 
         // get absolute path from image filename
         Path filePath = Paths.get("uploads").resolve(filename).toAbsolutePath();
+
+        logger.info(filePath.toString());
 
         Resource resource = null;
 
@@ -164,6 +170,8 @@ public class ClientController {
 
             // get absolute path where we will save this image on this computer
             Path filePath = Paths.get("uploads").resolve(originalFilename).toAbsolutePath();
+
+            logger.info(filePath.toString());
 
             // copy file into the computer: requires the input stream of data (multipartFile) and the path where
             // the data will be copied to (filePath)
