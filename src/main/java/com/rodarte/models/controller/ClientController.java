@@ -96,8 +96,19 @@ public class ClientController {
             e.printStackTrace();
         }
 
+        // if image actually does not exist, send default image from static files
         if (!resource.exists() && !resource.isReadable()) {
-            throw new RuntimeException("Image could not be served: " + filename);
+
+            filePath = Paths.get("src/main/resources/images").resolve("no-user.png").toAbsolutePath();
+
+            try {
+                resource = new UrlResource(filePath.toUri());
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+
+            logger.error("Image could not be loaded. Filename: " + filename);
+
         }
 
         // set Content-Disposition header to force browser to download image upon accessing route
