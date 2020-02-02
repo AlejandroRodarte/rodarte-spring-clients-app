@@ -2,11 +2,11 @@ package com.rodarte.models.controller;
 
 import com.rodarte.models.entity.Client;
 import com.rodarte.models.service.ClientService;
+import com.rodarte.models.service.UploadFileService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,16 +18,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 // allow our angular app to access this resource; enabled http methods: GET, POST, PUT, DELETE
@@ -39,6 +34,9 @@ public class ClientController {
 
     @Autowired
     private ClientService clientService;
+
+    @Autowired
+    private UploadFileService uploadFileService;
 
     private final Logger logger = LoggerFactory.getLogger(ClientController.class);
 
@@ -82,33 +80,12 @@ public class ClientController {
     @GetMapping("/image/{filename:.+}")
     public ResponseEntity<Resource> serveImage(@PathVariable String filename) {
 
-        // get absolute path from image filename
-        Path filePath = Paths.get("uploads").resolve(filename).toAbsolutePath();
-
-        logger.info(filePath.toString());
-
         Resource resource = null;
 
-        // get resource from the path's URI
         try {
-            resource = new UrlResource(filePath.toUri());
+            resource = uploadFileService.serve(filename);
         } catch (MalformedURLException e) {
             e.printStackTrace();
-        }
-
-        // if image actually does not exist, send default image from static files
-        if (!resource.exists() && !resource.isReadable()) {
-
-            filePath = Paths.get("src/main/resources/images").resolve("no-user.png").toAbsolutePath();
-
-            try {
-                resource = new UrlResource(filePath.toUri());
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
-
-            logger.error("Image could not be loaded. Filename: " + filename);
-
         }
 
         // set Content-Disposition header to force browser to download image upon accessing route
@@ -176,20 +153,12 @@ public class ClientController {
         // check if file is not empty
         if (!multipartFile.isEmpty()) {
 
-            // get file original name
-            String originalFilename = UUID.randomUUID().toString() + "_" + multipartFile.getOriginalFilename().replace(" ", "");
+            String uniqueFilename = null;
 
-            // get absolute path where we will save this image on this computer
-            Path filePath = Paths.get("uploads").resolve(originalFilename).toAbsolutePath();
-
-            logger.info(filePath.toString());
-
-            // copy file into the computer: requires the input stream of data (multipartFile) and the path where
-            // the data will be copied to (filePath)
             try {
-                Files.copy(multipartFile.getInputStream(), filePath);
+                uniqueFilename = uploadFileService.save(multipartFile);
             } catch (IOException e) {
-                response.put("message", "There was a problem uploading the image to this. Filename: " + originalFilename);
+                response.put("message", "There was a problem uploading the image to this server.");
                 response.put("error", e.getMessage() + ": " + e.getCause().getMessage());
                 return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
             }
@@ -197,27 +166,16 @@ public class ClientController {
             // verify if user had an associated image
             String previousFilename = client.getImage();
 
-            // if so
-            if (previousFilename != null && previousFilename.length() > 0) {
-
-                // get filepath to that image and parse path to a file object
-                Path previousFilePath = Paths.get("uploads").resolve(previousFilename).toAbsolutePath();
-                File previousFile = previousFilePath.toFile();
-
-                // if such file exists and can be read, delete
-                if (previousFile.exists() && previousFile.canRead()) {
-                    previousFile.delete();
-                }
-
-            }
+            // attempt to remove existing image (if exists)
+            uploadFileService.remove(previousFilename);
 
             // set image filename on database
-            client.setImage(originalFilename);
+            client.setImage(uniqueFilename);
 
             clientService.save(client);
 
             response.put("client", client);
-            response.put("message", "Image uploaded successfully into the server. Filename: " + originalFilename);
+            response.put("message", "Image uploaded successfully into the server. Filename: " + uniqueFilename);
 
         }
 
@@ -289,19 +247,10 @@ public class ClientController {
 
             Client client = clientService.findById(id);
 
-            String previousFilename = client.getImage();
+            String filename = client.getImage();
 
-            if (previousFilename != null && previousFilename.length() > 0) {
-
-                Path previousFilePath = Paths.get("uploads").resolve(previousFilename).toAbsolutePath();
-                File previousFile = previousFilePath.toFile();
-
-                if (previousFile.exists() && previousFile.canRead()) {
-                    previousFile.delete();
-                }
-
-            }
-
+            // attempt to delete image and delete client
+            uploadFileService.remove(filename);
             clientService.deleteById(id);
 
         } catch (DataAccessException e) {
