@@ -1,4 +1,4 @@
-package com.rodarte.models.controller;
+package com.rodarte.controller;
 
 import com.rodarte.models.entity.Client;
 import com.rodarte.models.entity.Region;
