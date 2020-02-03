@@ -1,6 +1,7 @@
 package com.rodarte.models.service;
 
 import com.rodarte.models.entity.Client;
+import com.rodarte.models.entity.Region;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -12,4 +13,5 @@ public interface ClientService {
     Client findById(Long id);
     Client save(Client client);
     void deleteById(Long id);
+    List<Region> findAllRegions();
 }

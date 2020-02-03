@@ -2,6 +2,7 @@ package com.rodarte.models.service;
 
 import com.rodarte.models.dao.ClientDao;
 import com.rodarte.models.entity.Client;
+import com.rodarte.models.entity.Region;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -44,6 +45,12 @@ public class ClientServiceImpl implements ClientService {
     @Transactional
     public void deleteById(Long id) {
         clientDao.deleteById(id);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Region> findAllRegions() {
+        return clientDao.findAllRegions();
     }
 
 }

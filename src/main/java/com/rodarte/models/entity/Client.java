@@ -41,6 +41,7 @@ public class Client implements Serializable {
     @Column(name = "image")
     private String image;
 
+    @NotNull(message = "can not be empty")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "region_id")
     @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
@@ -92,6 +93,14 @@ public class Client implements Serializable {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public Region getRegion() {
+        return region;
+    }
+
+    public void setRegion(Region region) {
+        this.region = region;
     }
 
 }

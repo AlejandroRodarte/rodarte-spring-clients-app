@@ -1,6 +1,7 @@
 package com.rodarte.models.controller;
 
 import com.rodarte.models.entity.Client;
+import com.rodarte.models.entity.Region;
 import com.rodarte.models.service.ClientService;
 import com.rodarte.models.service.UploadFileService;
 import org.slf4j.Logger;
@@ -43,6 +44,11 @@ public class ClientController {
     @GetMapping
     public List<Client> getClients() {
         return clientService.findAll();
+    }
+
+    @GetMapping("/regions")
+    public List<Region> getRegions() {
+        return clientService.findAllRegions();
     }
 
     @GetMapping("/page/{page}")
@@ -218,6 +224,7 @@ public class ClientController {
             clientToUpdate.setLastName(client.getLastName());
             clientToUpdate.setEmail(client.getEmail());
             clientToUpdate.setCreatedAt(client.getCreatedAt());
+            clientToUpdate.setRegion(client.getRegion());
 
             updatedClient = clientService.save(clientToUpdate);
 
