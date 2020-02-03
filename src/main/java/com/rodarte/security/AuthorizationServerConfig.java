@@ -22,16 +22,33 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Qualifier("authenticationManagerBean")
     private AuthenticationManager authenticationManager;
 
+    // configure authorization access for the routes that the authorization server manages
+    // routes covered by tokenKeyAccess: POST /oauth/token
+    // routes covered by checkTokenAccess: POST /oauth/check_token
     @Override
     public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
-        super.configure(security);
+        security.tokenKeyAccess("permitAll()")
+                .checkTokenAccess("isAuthenticated()");
     }
 
+    // ClientDetailsServiceConfigurer allows to define how our clients will be managed
+    // in this case we just have one client; the Angular app
+    // configuration required:
+    // 1. storage mechanism (in-memory)
+    // 2. grant types (how our clients will authenticate themselves)
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-        super.configure(clients);
+        clients.inMemory()
+                .withClient("angular-app")
+                .secret(passwordEncoder.encode("my-client-secret"))
+                .scopes("read", "write")
+                .authorizedGrantTypes("password", "refresh_token")
+                .accessTokenValiditySeconds(3600)
+                .refreshTokenValiditySeconds(3600);
     }
 
+    // configure resources that our endpoints will use on our authorization server to perform authentication and
+    // receive/validate tokens: inject the AuthenticacionManager and the TokenStore and TokenConverter instances
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
         endpoints.authenticationManager(authenticationManager)
