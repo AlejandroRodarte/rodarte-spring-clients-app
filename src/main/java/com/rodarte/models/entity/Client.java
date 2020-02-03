@@ -1,5 +1,7 @@
 package com.rodarte.models.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
@@ -38,6 +40,11 @@ public class Client implements Serializable {
 
     @Column(name = "image")
     private String image;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "region_id")
+    @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
+    private Region region;
 
     public Long getId() {
         return id;
