@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 // the AuthenticationProvider bean will use this implementation of the UserDetailsService to use the Authentication
 // credentials and find the user by username
 @Service
-public class UserServiceImpl implements UserDetailsService {
+public class UserServiceImpl implements UserDetailsService, UserService {
 
     @Autowired
     private UserDao userDao;
@@ -51,6 +51,11 @@ public class UserServiceImpl implements UserDetailsService {
             mapRolesToAuthorities(user.getRoles())
         );
 
+    }
+
+    @Override
+    public User findByUsername(String username) {
+        return userDao.findByUsername(username);
     }
 
     private static Collection<GrantedAuthority> mapRolesToAuthorities(List<Role> roles) {
