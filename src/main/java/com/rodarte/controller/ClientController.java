@@ -14,6 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -47,6 +48,7 @@ public class ClientController {
     }
 
     @GetMapping("/regions")
+    @Secured("ROLE_ADMIN")
     public List<Region> getRegions() {
         return clientService.findAllRegions();
     }
@@ -56,6 +58,7 @@ public class ClientController {
         return clientService.findAll(PageRequest.of(page, 4));
     }
 
+    @Secured({ "ROLE_USER", "ROLE_ADMIN" })
     @GetMapping("/{id}")
     public ResponseEntity<?> getClient(@PathVariable Long id) {
 
@@ -103,6 +106,7 @@ public class ClientController {
     }
 
     @PostMapping
+    @Secured("ROLE_ADMIN")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> saveClient(@Valid @RequestBody Client client, BindingResult bindingResult) {
 
@@ -145,6 +149,7 @@ public class ClientController {
     // upload image route
     // expects: form-data with two args: the image itself (multipartFile) and the client id
     @PostMapping("/upload")
+    @Secured({ "ROLE_USER", "ROLE_ADMIN" })
     public ResponseEntity<?> uploadImage(@RequestParam("image") MultipartFile multipartFile, @RequestParam("id") Long id) {
 
         Map<String, Object> response = new HashMap<>();
@@ -190,6 +195,7 @@ public class ClientController {
     }
 
     @PutMapping("/{id}")
+    @Secured("ROLE_ADMIN")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> updateClient(@Valid @RequestBody Client client, BindingResult bindingResult, @PathVariable Long id) {
 
@@ -245,6 +251,7 @@ public class ClientController {
     }
 
     @DeleteMapping("/{id}")
+    @Secured("ROLE_ADMIN")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<?> deleteClient(@PathVariable Long id) {
 
