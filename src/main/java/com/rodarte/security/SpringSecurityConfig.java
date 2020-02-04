@@ -23,7 +23,6 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     // AuthenticationManager will use our UserDetailsService to search for users by username and use BCrypt to hash
     // passwords
     @Override
-    @Autowired
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService)
                 .passwordEncoder(passwordEncoder());
