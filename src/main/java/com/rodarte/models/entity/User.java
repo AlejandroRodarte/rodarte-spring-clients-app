@@ -1,5 +1,7 @@
 package com.rodarte.models.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
@@ -16,9 +18,11 @@ public class User implements Serializable {
     @Column(name = "username", unique = true, length = 20)
     private String username;
 
+    @JsonIgnore
     @Column(name = "password", length = 60)
     private String password;
 
+    @JsonIgnore
     @Column(name = "enabled")
     private Boolean enabled;
 
