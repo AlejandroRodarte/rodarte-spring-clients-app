@@ -26,10 +26,7 @@ public class TokenEnhancerImpl implements TokenEnhancer {
 
         Map<String, Object> info = new HashMap<>();
 
-        info.put("id", user.getId());
-        info.put("firstName", user.getFirstName());
-        info.put("lastName", user.getLastName());
-        info.put("email", user.getEmail());
+        info.put("user", user);
 
         ((DefaultOAuth2AccessToken) oAuth2AccessToken).setAdditionalInformation(info);
 

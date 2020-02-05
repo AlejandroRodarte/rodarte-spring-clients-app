@@ -200,7 +200,6 @@ public class ClientController {
     public ResponseEntity<?> updateClient(@Valid @RequestBody Client client, BindingResult bindingResult, @PathVariable Long id) {
 
         Client clientToUpdate = clientService.findById(id);
-        Client updatedClient = null;
 
         Map<String, Object> response = new HashMap<>();
 
@@ -232,7 +231,7 @@ public class ClientController {
             clientToUpdate.setCreatedAt(client.getCreatedAt());
             clientToUpdate.setRegion(client.getRegion());
 
-            updatedClient = clientService.save(clientToUpdate);
+            clientService.save(clientToUpdate);
 
         } catch (DataAccessException e) {
 
@@ -244,7 +243,7 @@ public class ClientController {
         }
 
         response.put("message", "Client updated successfully!");
-        response.put("client", updatedClient);
+        response.put("client", clientToUpdate);
 
         return new ResponseEntity<>(response, HttpStatus.CREATED);
 
