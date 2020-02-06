@@ -58,7 +58,7 @@ public class ClientController {
         return clientService.findAll(PageRequest.of(page, 4));
     }
 
-    @Secured({ "ROLE_USER", "ROLE_ADMIN" })
+    // @Secured({ "ROLE_USER", "ROLE_ADMIN" })
     @GetMapping("/{id}")
     public ResponseEntity<?> getClient(@PathVariable Long id) {
 
