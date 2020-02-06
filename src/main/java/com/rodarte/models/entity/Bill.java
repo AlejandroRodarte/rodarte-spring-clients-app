@@ -37,6 +37,18 @@ public class Bill implements Serializable {
         this.createdAt = new Date();
     }
 
+    public Double getTotal() {
+
+        Double total = 0.00;
+
+        for (BillItem billItem: billItems) {
+            total += billItem.getImport();
+        }
+
+        return total;
+
+    }
+
     public Long getId() {
         return id;
     }

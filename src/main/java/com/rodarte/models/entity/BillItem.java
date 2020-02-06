@@ -15,8 +15,12 @@ public class BillItem implements Serializable {
     @Column(name = "quantity")
     private Integer quantity;
 
-    public Double calculateImport() {
-        return this.quantity.doubleValue();
+    @ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
+    @JoinColumn(name = "product_id")
+    private Product product;
+
+    public Double getImport() {
+        return this.quantity.doubleValue() * this.product.getPrice();
     }
 
     public Long getId() {
