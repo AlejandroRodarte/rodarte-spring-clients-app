@@ -19,7 +19,8 @@ public interface ClientDao extends JpaRepository<Client, Long> {
     @EntityGraph(attributePaths = "region")
     Page<Client> findAll(Pageable pageable);
 
-    @EntityGraph(attributePaths = "region")
+    // populating nested children
+    @EntityGraph(attributePaths = { "region", "bills.billItems.product" })
     Optional<Client> findById(Long id);
 
     @Query("FROM Region")

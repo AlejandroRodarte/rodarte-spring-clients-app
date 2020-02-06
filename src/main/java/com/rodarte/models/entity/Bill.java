@@ -1,5 +1,7 @@
 package com.rodarte.models.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -24,6 +26,8 @@ public class Bill implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date createdAt;
 
+    // ignore inverse relation in serialization
+    @JsonIgnoreProperties({ "bills" })
     @ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
     @JoinColumn(name = "client_id")
     private Client client;

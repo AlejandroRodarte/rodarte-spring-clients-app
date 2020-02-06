@@ -1,5 +1,7 @@
 package com.rodarte.models.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
@@ -45,6 +47,8 @@ public class Client implements Serializable {
     @JoinColumn(name = "region_id")
     private Region region;
 
+    // ignore inverse relationship on serialization
+    @JsonIgnoreProperties({ "client" })
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "client", cascade = CascadeType.ALL)
     private List<Bill> bills;
 
