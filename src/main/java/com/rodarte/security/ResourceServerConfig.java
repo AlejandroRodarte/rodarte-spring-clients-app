@@ -4,7 +4,6 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
@@ -62,9 +61,10 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
     }
 
     @Bean
-    @Order(Ordered.HIGHEST_PRECEDENCE)
     public FilterRegistrationBean<CorsFilter> corsFilter() {
-        return new FilterRegistrationBean<>(new CorsFilter(corsConfigurationSource()));
+        FilterRegistrationBean<CorsFilter> filterRegistrationBean = new FilterRegistrationBean<>(new CorsFilter(corsConfigurationSource()));
+        filterRegistrationBean.setOrder(Ordered.HIGHEST_PRECEDENCE);
+        return filterRegistrationBean;
     }
 
 }

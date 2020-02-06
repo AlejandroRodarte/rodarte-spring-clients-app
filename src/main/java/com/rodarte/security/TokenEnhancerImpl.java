@@ -27,6 +27,7 @@ public class TokenEnhancerImpl implements TokenEnhancer {
         Map<String, Object> info = new HashMap<>();
 
         info.put("user", user);
+        info.put("refresh_token_expires_in", 604800);
 
         ((DefaultOAuth2AccessToken) oAuth2AccessToken).setAdditionalInformation(info);
 
