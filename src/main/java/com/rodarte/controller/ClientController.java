@@ -1,9 +1,12 @@
 package com.rodarte.controller;
 
+import com.rodarte.models.dto.ClientDto;
+import com.rodarte.models.dto.RawClientDto;
 import com.rodarte.models.entity.Client;
 import com.rodarte.models.entity.Region;
 import com.rodarte.models.service.ClientService;
 import com.rodarte.models.service.UploadFileService;
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,11 +43,14 @@ public class ClientController {
     @Autowired
     private UploadFileService uploadFileService;
 
+    @Autowired
+    private ModelMapper modelMapper;
+
     private final Logger logger = LoggerFactory.getLogger(ClientController.class);
 
     @GetMapping
-    public List<Client> getClients() {
-        return clientService.findAll();
+    public List<RawClientDto> getClients() {
+        return clientService.findAll().stream().map(client -> modelMapper.map(client, RawClientDto.class)).collect(Collectors.toList());
     }
 
     @GetMapping("/regions")
@@ -54,8 +60,8 @@ public class ClientController {
     }
 
     @GetMapping("/page/{page}")
-    public Page<Client> getClients(@PathVariable Integer page) {
-        return clientService.findAll(PageRequest.of(page, 4));
+    public Page<RawClientDto> getClients(@PathVariable Integer page) {
+        return clientService.findAll(PageRequest.of(page, 4)).map(client -> modelMapper.map(client, RawClientDto.class));
     }
 
     // @Secured({ "ROLE_USER", "ROLE_ADMIN" })
@@ -81,7 +87,9 @@ public class ClientController {
             return new ResponseEntity<Map<String, Object>>(errorResponse, HttpStatus.NOT_FOUND);
         }
 
-        return new ResponseEntity<Client>(client, HttpStatus.OK);
+        ClientDto clientDto = modelMapper.map(client, ClientDto.class);
+
+        return new ResponseEntity<ClientDto>(clientDto, HttpStatus.OK);
 
     }
 
