@@ -24,4 +24,10 @@ public class BillController {
         return modelMapper.map(clientService.findBillById(id), BillDto.class);
     }
 
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteBill(@PathVariable Long id) {
+        clientService.deleteBillById(id);
+    }
+
 }
