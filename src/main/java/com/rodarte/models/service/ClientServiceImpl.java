@@ -1,6 +1,8 @@
 package com.rodarte.models.service;
 
+import com.rodarte.models.dao.BillDao;
 import com.rodarte.models.dao.ClientDao;
+import com.rodarte.models.entity.Bill;
 import com.rodarte.models.entity.Client;
 import com.rodarte.models.entity.Region;
 import org.modelmapper.ModelMapper;
@@ -17,6 +19,9 @@ public class ClientServiceImpl implements ClientService {
 
     @Autowired
     private ClientDao clientDao;
+
+    @Autowired
+    private BillDao billDao;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -55,6 +60,24 @@ public class ClientServiceImpl implements ClientService {
     @Transactional(readOnly = true)
     public List<Region> findAllRegions() {
         return clientDao.findAllRegions();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Bill findBillById(Long id) {
+        return billDao.findById(id).orElse(null);
+    }
+
+    @Override
+    @Transactional
+    public Bill saveBill(Bill bill) {
+        return billDao.save(bill);
+    }
+
+    @Override
+    @Transactional
+    public void deleteBillById(Long id) {
+        billDao.deleteById(id);
     }
 
 }
