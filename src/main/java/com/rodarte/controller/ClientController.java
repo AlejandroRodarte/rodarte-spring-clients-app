@@ -2,8 +2,8 @@ package com.rodarte.controller;
 
 import com.rodarte.models.dto.ClientDto;
 import com.rodarte.models.dto.RawClientDto;
+import com.rodarte.models.dto.RegionDto;
 import com.rodarte.models.entity.Client;
-import com.rodarte.models.entity.Region;
 import com.rodarte.models.service.ClientService;
 import com.rodarte.models.service.UploadFileService;
 import org.modelmapper.ModelMapper;
@@ -55,8 +55,8 @@ public class ClientController {
 
     @GetMapping("/regions")
     @Secured("ROLE_ADMIN")
-    public List<Region> getRegions() {
-        return clientService.findAllRegions();
+    public List<RegionDto> getRegions() {
+        return clientService.findAllRegions().stream().map(region -> modelMapper.map(region, RegionDto.class)).collect(Collectors.toList());
     }
 
     @GetMapping("/page/{page}")
