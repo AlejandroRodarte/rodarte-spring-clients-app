@@ -17,7 +17,7 @@ public class BillDto implements Serializable {
         Double total = 0.00;
 
         for (BillItemDto billItem: billItems) {
-            total += billItem.getImport();
+            total += billItem.getPrice();
         }
 
         return total;

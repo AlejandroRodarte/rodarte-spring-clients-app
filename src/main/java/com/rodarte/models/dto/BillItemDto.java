@@ -8,7 +8,7 @@ public class BillItemDto implements Serializable {
     private Integer quantity;
     private ProductDto product;
 
-    public Double getImport() {
+    public Double getPrice() {
         return this.quantity.doubleValue() * this.product.getPrice();
     }
 

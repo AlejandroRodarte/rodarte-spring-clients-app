@@ -46,7 +46,7 @@ public class Bill implements Serializable {
         Double total = 0.00;
 
         for (BillItem billItem: billItems) {
-            total += billItem.getImport();
+            total += billItem.getPrice();
         }
 
         return total;

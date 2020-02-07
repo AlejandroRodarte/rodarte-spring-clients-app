@@ -19,7 +19,7 @@ public class BillItem implements Serializable {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    public Double getImport() {
+    public Double getPrice() {
         return this.quantity.doubleValue() * this.product.getPrice();
     }
 
