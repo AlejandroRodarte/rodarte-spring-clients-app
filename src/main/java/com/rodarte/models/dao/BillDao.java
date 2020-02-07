@@ -7,6 +7,6 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.Optional;
 
 public interface BillDao extends CrudRepository<Bill, Long> {
-    @EntityGraph(attributePaths = "billItems.product")
+    @EntityGraph(attributePaths = { "client.region", "billItems.product" }, type = EntityGraph.EntityGraphType.LOAD)
     Optional<Bill> findById(Long id);
 }

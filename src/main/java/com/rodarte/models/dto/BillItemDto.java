@@ -8,6 +8,15 @@ public class BillItemDto implements Serializable {
     private Integer quantity;
     private ProductDto product;
 
+    public BillItemDto(Long id, Integer quantity, ProductDto product) {
+        this.id = id;
+        this.quantity = quantity;
+        this.product = product;
+    }
+
+    public BillItemDto() {
+    }
+
     public Double getPrice() {
         return this.quantity.doubleValue() * this.product.getPrice();
     }

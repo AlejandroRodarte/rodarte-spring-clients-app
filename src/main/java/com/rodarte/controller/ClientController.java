@@ -64,7 +64,7 @@ public class ClientController {
         return clientService.findAll(PageRequest.of(page, 4)).map(client -> modelMapper.map(client, RawClientDto.class));
     }
 
-    // @Secured({ "ROLE_USER", "ROLE_ADMIN" })
+    @Secured({ "ROLE_USER", "ROLE_ADMIN" })
     @GetMapping("/{id}")
     public ResponseEntity<?> getClient(@PathVariable Long id) {
 
@@ -148,7 +148,7 @@ public class ClientController {
         }
 
         response.put("message", "Client persisted successfully!");
-        response.put("client", newClient);
+        response.put("client", modelMapper.map(newClient, RawClientDto.class));
 
         return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
 
@@ -193,7 +193,7 @@ public class ClientController {
 
             clientService.save(client);
 
-            response.put("client", client);
+            response.put("client", modelMapper.map(client, RawClientDto.class));
             response.put("message", "Image uploaded successfully into the server. Filename: " + uniqueFilename);
 
         }
@@ -251,7 +251,7 @@ public class ClientController {
         }
 
         response.put("message", "Client updated successfully!");
-        response.put("client", clientToUpdate);
+        response.put("client", modelMapper.map(clientToUpdate, RawClientDto.class));
 
         return new ResponseEntity<>(response, HttpStatus.CREATED);
 

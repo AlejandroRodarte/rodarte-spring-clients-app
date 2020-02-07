@@ -2,39 +2,24 @@ package com.rodarte.models.dto;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
-public class BillDto implements Serializable {
+public class RawBillDto implements Serializable {
 
     private Long id;
     private String description;
     private String comment;
     private Date createdAt;
-    private List<BillItemDto> billItems;
-    private RawClientDto client;
+    private Double total;
 
-    public BillDto(Long id, String description, String comment, Date createdAt, List<BillItemDto> billItems, RawClientDto client) {
+    public RawBillDto(Long id, String description, String comment, Date createdAt, Double total) {
         this.id = id;
         this.description = description;
         this.comment = comment;
         this.createdAt = createdAt;
-        this.billItems = billItems;
-        this.client = client;
+        this.total = total;
     }
 
-    public BillDto() {
-    }
-
-    public Double getTotal() {
-
-        Double total = 0.00;
-
-        for (BillItemDto billItem: billItems) {
-            total += billItem.getPrice();
-        }
-
-        return total;
-
+    public RawBillDto() {
     }
 
     public Long getId() {
@@ -69,20 +54,12 @@ public class BillDto implements Serializable {
         this.createdAt = createdAt;
     }
 
-    public List<BillItemDto> getBillItems() {
-        return billItems;
+    public Double getTotal() {
+        return total;
     }
 
-    public void setBillItems(List<BillItemDto> billItems) {
-        this.billItems = billItems;
-    }
-
-    public RawClientDto getClient() {
-        return client;
-    }
-
-    public void setClient(RawClientDto client) {
-        this.client = client;
+    public void setTotal(Double total) {
+        this.total = total;
     }
 
 }

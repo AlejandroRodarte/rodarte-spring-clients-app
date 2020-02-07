@@ -6,9 +6,9 @@ import java.util.List;
 
 public class ClientDto extends RawClientDto implements Serializable {
 
-    private List<BillDto> bills;
+    private List<RawBillDto> bills;
 
-    public ClientDto(Long id, String firstName, String lastName, String email, Date createdAt, String image, RegionDto region, List<BillDto> bills) {
+    public ClientDto(Long id, String firstName, String lastName, String email, Date createdAt, String image, RegionDto region, List<RawBillDto> bills) {
         super(id, firstName, lastName, email, createdAt, image, region);
         this.bills = bills;
     }
@@ -16,11 +16,11 @@ public class ClientDto extends RawClientDto implements Serializable {
     public ClientDto() {
     }
 
-    public List<BillDto> getBills() {
+    public List<RawBillDto> getBills() {
         return bills;
     }
 
-    public void setBills(List<BillDto> bills) {
+    public void setBills(List<RawBillDto> bills) {
         this.bills = bills;
     }
 
