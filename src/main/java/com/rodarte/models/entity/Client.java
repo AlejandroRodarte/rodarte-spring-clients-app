@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "clients")
@@ -61,8 +61,7 @@ public class Client implements Serializable {
     // ignore inverse relationship on serialization
     @JsonIgnoreProperties({ "client" })
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "client", cascade = CascadeType.ALL)
-    @OrderColumn(name = "bill_index", nullable = false)
-    private List<Bill> bills;
+    private Set<Bill> bills;
 
     public Long getId() {
         return id;
@@ -120,11 +119,11 @@ public class Client implements Serializable {
         this.region = region;
     }
 
-    public List<Bill> getBills() {
+    public Set<Bill> getBills() {
         return bills;
     }
 
-    public void setBills(List<Bill> bills) {
+    public void setBills(Set<Bill> bills) {
         this.bills = bills;
     }
 

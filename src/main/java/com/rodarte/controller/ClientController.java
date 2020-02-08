@@ -72,7 +72,7 @@ public class ClientController {
         Map<String, Object> errorResponse = new HashMap<>();
 
         try {
-            client = clientService.findById(id);
+            client = clientService.findById(id, true);
         } catch (DataAccessException e) {
 
             errorResponse.put("message", "Error accessing the database!");
@@ -162,7 +162,7 @@ public class ClientController {
 
         Map<String, Object> response = new HashMap<>();
 
-        Client client = clientService.findById(id);
+        Client client = clientService.findById(id, false);
 
         if (client == null) {
             response.put("message", "The client with ID of " + id + " does not exist in the database!");
@@ -207,7 +207,7 @@ public class ClientController {
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> updateClient(@Valid @RequestBody Client client, BindingResult bindingResult, @PathVariable Long id) {
 
-        Client clientToUpdate = clientService.findById(id);
+        Client clientToUpdate = clientService.findById(id, false);
 
         Map<String, Object> response = new HashMap<>();
 
@@ -266,7 +266,7 @@ public class ClientController {
 
         try {
 
-            Client client = clientService.findById(id);
+            Client client = clientService.findById(id, false);
 
             String filename = client.getImage();
 

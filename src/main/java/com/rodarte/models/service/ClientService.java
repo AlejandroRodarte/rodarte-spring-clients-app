@@ -11,7 +11,7 @@ import java.util.List;
 public interface ClientService {
     List<Client> findAll();
     Page<Client> findAll(Pageable pageable);
-    Client findById(Long id);
+    Client findById(Long id, Boolean eager);
     Client save(Client client);
     void deleteById(Long id);
     List<Region> findAllRegions();

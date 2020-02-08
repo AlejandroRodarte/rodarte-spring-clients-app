@@ -5,5 +5,5 @@ import com.rodarte.models.entity.Client;
 import java.util.Optional;
 
 public interface ClientDaoCustom {
-    Optional<Client> findByIdAndGetRegionsAndBills(Long id);
+    Optional<Client> findByIdEager(Long id);
 }

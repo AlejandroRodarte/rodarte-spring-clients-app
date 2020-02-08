@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "bills")
@@ -34,12 +34,8 @@ public class Bill implements Serializable {
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "bill_id")
-    @OrderColumn(name = "bill_item_index", nullable = false)
-    private List<BillItem> billItems;
+    private Set<BillItem> billItems;
 
-    @Column(name = "bill_index", nullable = false)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Long billIndex;
 
     @PrePersist
     public void prePersist() {
@@ -50,10 +46,8 @@ public class Bill implements Serializable {
 
         Double total = 0.00;
 
-        System.out.println(billItems.size());
         for (BillItem billItem: billItems) {
-            System.out.println(billItem);
-            total += billItem != null ? billItem.getPrice() : 0;
+            total += billItem.getPrice();
         }
 
         return total;
@@ -100,20 +94,12 @@ public class Bill implements Serializable {
         this.client = client;
     }
 
-    public List<BillItem> getBillItems() {
+    public Set<BillItem> getBillItems() {
         return billItems;
     }
 
-    public void setBillItems(List<BillItem> billItems) {
+    public void setBillItems(Set<BillItem> billItems) {
         this.billItems = billItems;
-    }
-
-    public Long getBillIndex() {
-        return billIndex;
-    }
-
-    public void setBillIndex(Long billIndex) {
-        this.billIndex = billIndex;
     }
 
 }

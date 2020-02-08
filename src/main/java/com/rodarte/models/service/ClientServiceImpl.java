@@ -5,7 +5,6 @@ import com.rodarte.models.dao.ClientDao;
 import com.rodarte.models.entity.Bill;
 import com.rodarte.models.entity.Client;
 import com.rodarte.models.entity.Region;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,9 +22,6 @@ public class ClientServiceImpl implements ClientService {
     @Autowired
     private BillDao billDao;
 
-    @Autowired
-    private ModelMapper modelMapper;
-
     @Override
     @Transactional(readOnly = true)
     public List<Client> findAll() {
@@ -40,8 +36,11 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     @Transactional(readOnly = true)
-    public Client findById(Long id) {
-        return clientDao.findByIdAndGetRegionsAndBills(id).orElse(null);
+    public Client findById(Long id, Boolean eager) {
+        if (!eager) {
+            return clientDao.findById(id).orElse(null);
+        }
+        return clientDao.findByIdEager(id).orElse(null);
     }
 
     @Override

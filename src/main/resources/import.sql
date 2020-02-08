@@ -38,19 +38,12 @@ INSERT INTO products (name, price, created_at) VALUES('Hewlett Packard Multifunc
 INSERT INTO products (name, price, created_at) VALUES('Bianchi Bicicleta Aro 26', 69990, NOW());
 INSERT INTO products (name, price, created_at) VALUES('Mica Comoda 5 Cajones', 299990, NOW());
 
-INSERT INTO bills (description, comment, client_id, created_at, bill_index) VALUES('Factura equipos de oficina', null, 1, NOW(), 0);
+INSERT INTO bills (description, comment, client_id, created_at) VALUES('Factura equipos de oficina', null, 1, NOW());
 
-INSERT INTO bill_items (quantity, bill_id, product_id, bill_item_index) VALUES(1, 1, 1, 0);
-INSERT INTO bill_items (quantity, bill_id, product_id, bill_item_index) VALUES(2, 1, 4, 1);
-INSERT INTO bill_items (quantity, bill_id, product_id, bill_item_index) VALUES(1, 1, 5, 2);
-INSERT INTO bill_items (quantity, bill_id, product_id, bill_item_index) VALUES(1, 1, 7, 3);
+INSERT INTO bill_items (quantity, bill_id, product_id) VALUES(1, 1, 1);
+INSERT INTO bill_items (quantity, bill_id, product_id) VALUES(2, 1, 4);
+INSERT INTO bill_items (quantity, bill_id, product_id) VALUES(1, 1, 5);
+INSERT INTO bill_items (quantity, bill_id, product_id) VALUES(1, 1, 7);
 
-INSERT INTO bills (description, comment, client_id, created_at, bill_index) VALUES('Factura Bicicleta', 'Alguna nota importante!', 1, NOW(), 1);
-INSERT INTO bill_items (quantity, bill_id, product_id, bill_item_index) VALUES(3, 2, 6, 4);
-
-INSERT INTO bills (description, comment, client_id, created_at, bill_index) VALUES('Factura equipos de computo', 'Algo muy suave', 1, NOW(), 2);
-
-INSERT INTO bill_items (quantity, bill_id, product_id, bill_item_index) VALUES(1, 3, 1, 5);
-INSERT INTO bill_items (quantity, bill_id, product_id, bill_item_index) VALUES(2, 3, 4, 6);
-INSERT INTO bill_items (quantity, bill_id, product_id, bill_item_index) VALUES(1, 3, 5, 7);
-INSERT INTO bill_items (quantity, bill_id, product_id, bill_item_index) VALUES(1, 3, 7, 8);
+INSERT INTO bills (description, comment, client_id, created_at) VALUES('Factura Bicicleta', 'Alguna nota importante!', 1, NOW());
+INSERT INTO bill_items (quantity, bill_id, product_id) VALUES(3, 2, 6);
