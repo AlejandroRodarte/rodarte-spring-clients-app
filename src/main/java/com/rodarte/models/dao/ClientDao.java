@@ -9,19 +9,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
-import java.util.Optional;
 
-public interface ClientDao extends JpaRepository<Client, Long> {
+public interface ClientDao extends JpaRepository<Client, Long>, ClientDaoCustom {
 
     @EntityGraph(attributePaths = "region")
     List<Client> findAll();
 
     @EntityGraph(attributePaths = "region")
     Page<Client> findAll(Pageable pageable);
-
-    // populating nested children
-    @EntityGraph(attributePaths = { "region", "bills.billItems.product" })
-    Optional<Client> findById(Long id);
 
     @Query("FROM Region")
     List<Region> findAllRegions();

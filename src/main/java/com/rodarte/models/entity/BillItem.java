@@ -19,6 +19,10 @@ public class BillItem implements Serializable {
     @JoinColumn(name = "product_id")
     private Product product;
 
+    @Column(name = "bill_item_index", nullable = false)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private Long billItemIndex;
+
     public Double getPrice() {
         return this.quantity.doubleValue() * this.product.getPrice();
     }
@@ -45,6 +49,14 @@ public class BillItem implements Serializable {
 
     public void setProduct(Product product) {
         this.product = product;
+    }
+
+    public Long getBillItemIndex() {
+        return billItemIndex;
+    }
+
+    public void setBillItemIndex(Long billItemIndex) {
+        this.billItemIndex = billItemIndex;
     }
 
 }

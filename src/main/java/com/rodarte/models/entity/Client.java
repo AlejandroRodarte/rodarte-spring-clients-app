@@ -13,6 +13,17 @@ import java.util.List;
 
 @Entity
 @Table(name = "clients")
+@NamedQueries({
+    @NamedQuery(
+        name = "queries.Client.findById",
+        query = "SELECT c FROM Client c " +
+                "JOIN FETCH c.region r " +
+                "JOIN FETCH c.bills b " +
+                "JOIN FETCH b.billItems bi " +
+                "JOIN FETCH bi.product p " +
+                "WHERE c.id = :id"
+    )
+})
 public class Client implements Serializable {
 
     @Id
@@ -50,6 +61,7 @@ public class Client implements Serializable {
     // ignore inverse relationship on serialization
     @JsonIgnoreProperties({ "client" })
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "client", cascade = CascadeType.ALL)
+    @OrderColumn(name = "bill_index", nullable = false)
     private List<Bill> bills;
 
     public Long getId() {

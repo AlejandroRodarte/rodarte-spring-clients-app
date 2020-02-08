@@ -34,7 +34,12 @@ public class Bill implements Serializable {
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "bill_id")
+    @OrderColumn(name = "bill_item_index", nullable = false)
     private List<BillItem> billItems;
+
+    @Column(name = "bill_index", nullable = false)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private Long billIndex;
 
     @PrePersist
     public void prePersist() {
@@ -45,8 +50,10 @@ public class Bill implements Serializable {
 
         Double total = 0.00;
 
+        System.out.println(billItems.size());
         for (BillItem billItem: billItems) {
-            total += billItem.getPrice();
+            System.out.println(billItem);
+            total += billItem != null ? billItem.getPrice() : 0;
         }
 
         return total;
@@ -99,6 +106,14 @@ public class Bill implements Serializable {
 
     public void setBillItems(List<BillItem> billItems) {
         this.billItems = billItems;
+    }
+
+    public Long getBillIndex() {
+        return billIndex;
+    }
+
+    public void setBillIndex(Long billIndex) {
+        this.billIndex = billIndex;
     }
 
 }
