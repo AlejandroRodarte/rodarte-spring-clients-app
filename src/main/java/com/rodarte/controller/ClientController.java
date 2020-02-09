@@ -66,13 +66,13 @@ public class ClientController {
 
     @Secured({ "ROLE_USER", "ROLE_ADMIN" })
     @GetMapping("/{id}")
-    public ResponseEntity<?> getClient(@PathVariable Long id) {
+    public ResponseEntity<?> getClient(@PathVariable Long id, @RequestParam(value = "eager", required = false, defaultValue = "true") boolean eager) {
 
         Client client = null;
         Map<String, Object> errorResponse = new HashMap<>();
 
         try {
-            client = clientService.findById(id, true);
+            client = clientService.findById(id, eager);
         } catch (DataAccessException e) {
 
             errorResponse.put("message", "Error accessing the database!");
@@ -87,9 +87,11 @@ public class ClientController {
             return new ResponseEntity<Map<String, Object>>(errorResponse, HttpStatus.NOT_FOUND);
         }
 
-        ClientDto clientDto = modelMapper.map(client, ClientDto.class);
-
-        return new ResponseEntity<ClientDto>(clientDto, HttpStatus.OK);
+        if (eager) {
+            return new ResponseEntity<>(modelMapper.map(client, ClientDto.class), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(modelMapper.map(client, RawClientDto.class), HttpStatus.OK);
+        }
 
     }
 
