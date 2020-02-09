@@ -28,14 +28,13 @@ public class Bill implements Serializable {
 
     // ignore inverse relation in serialization
     @JsonIgnoreProperties({ "bills" })
-    @ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
+    @ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH })
     @JoinColumn(name = "client_id")
     private Client client;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "bill_id")
     private Set<BillItem> billItems;
-
 
     @PrePersist
     public void prePersist() {

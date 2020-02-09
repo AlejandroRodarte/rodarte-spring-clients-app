@@ -2,6 +2,7 @@ package com.rodarte.controller;
 
 import com.rodarte.models.dto.BillDto;
 import com.rodarte.models.dto.ProductDto;
+import com.rodarte.models.entity.Bill;
 import com.rodarte.models.service.ClientService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,12 @@ public class BillController {
     @GetMapping("/products/{name}")
     public List<ProductDto> getProductsByName(@PathVariable String name) {
         return clientService.findProductByName(name).stream().map(product -> modelMapper.map(product, ProductDto.class)).collect(Collectors.toList());
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public BillDto createBill(@RequestBody Bill bill) {
+        return modelMapper.map(clientService.saveBill(bill), BillDto.class);
     }
 
     @DeleteMapping("/{id}")
