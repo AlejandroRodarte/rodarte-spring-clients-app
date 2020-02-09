@@ -18,9 +18,9 @@ import java.util.Set;
         name = "queries.Client.findById",
         query = "SELECT c FROM Client c " +
                 "JOIN FETCH c.region r " +
-                "JOIN FETCH c.bills b " +
-                "JOIN FETCH b.billItems bi " +
-                "JOIN FETCH bi.product p " +
+                "LEFT JOIN FETCH c.bills b " +
+                "LEFT JOIN FETCH b.billItems bi " +
+                "LEFT JOIN FETCH bi.product p " +
                 "WHERE c.id = :id"
     )
 })
