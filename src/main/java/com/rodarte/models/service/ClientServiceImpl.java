@@ -2,8 +2,10 @@ package com.rodarte.models.service;
 
 import com.rodarte.models.dao.BillDao;
 import com.rodarte.models.dao.ClientDao;
+import com.rodarte.models.dao.ProductDao;
 import com.rodarte.models.entity.Bill;
 import com.rodarte.models.entity.Client;
+import com.rodarte.models.entity.Product;
 import com.rodarte.models.entity.Region;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -21,6 +23,9 @@ public class ClientServiceImpl implements ClientService {
 
     @Autowired
     private BillDao billDao;
+
+    @Autowired
+    private ProductDao productDao;
 
     @Override
     @Transactional(readOnly = true)
@@ -77,6 +82,12 @@ public class ClientServiceImpl implements ClientService {
     @Transactional
     public void deleteBillById(Long id) {
         billDao.deleteById(id);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Product> findProductByName(String name) {
+        return productDao.findByNameContainingIgnoreCase(name);
     }
 
 }

@@ -2,6 +2,7 @@ package com.rodarte.models.service;
 
 import com.rodarte.models.entity.Bill;
 import com.rodarte.models.entity.Client;
+import com.rodarte.models.entity.Product;
 import com.rodarte.models.entity.Region;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,4 +19,5 @@ public interface ClientService {
     Bill findBillById(Long id);
     Bill saveBill(Bill bill);
     void deleteBillById(Long id);
+    List<Product> findProductByName(String name);
 }
