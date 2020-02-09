@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 
 // allow our angular app to access this resource; enabled http methods: GET, POST, PUT, DELETE
 // if not specified, it allows the selected origins to perform all operations
-@CrossOrigin(origins = { "http://localhost:4200" })
+@CrossOrigin(origins = { "http://localhost:4200", "*" })
 @RestController
 @RequestMapping("/api/clients")
 public class ClientController {
